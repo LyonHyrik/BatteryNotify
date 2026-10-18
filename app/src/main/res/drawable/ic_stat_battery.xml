@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 通知小图标：实心电池 + 闪电镂空（evenOdd）。
+     通知小图标会被系统统一着色，只依赖 alpha 形状，故用单色实心造型保证小尺寸辨识度。 -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportWidth="24"
+    android:viewportHeight="24">
+
+    <!-- 电池主体（实心圆角矩形），闪电以 evenOdd 规则镂空 -->
+    <path
+        android:fillType="evenOdd"
+        android:fillColor="#FFFFFFFF"
+        android:pathData="M4.5,6.5 H17 A2.5,2.5 0 0 1 19.5,9 V15 A2.5,2.5 0 0 1 17,17.5 H4.5 A2.5,2.5 0 0 1 2,15 V9 A2.5,2.5 0 0 1 4.5,6.5 Z
+M12.1,8 L8.2,13 H10.4 L9.5,16.2 L13.4,11.2 H11.2 Z" />
+
+    <!-- 右侧正极端子 -->
+    <path
+        android:fillColor="#FFFFFFFF"
+        android:pathData="M20.3,10 H21.3 A1,1 0 0 1 22.3,11 V13 A1,1 0 0 1 21.3,14 H20.3 Z" />
+</vector>

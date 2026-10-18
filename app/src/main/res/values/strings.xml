@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">电池信息</string>
+
+    <!-- 底部导航 -->
+    <string name="nav_home">通知</string>
+    <string name="nav_settings">设置</string>
+
+    <!-- 页面 -->
+    <string name="screen_home">电池信息</string>
+    <string name="screen_settings">设置</string>
+
+    <!-- 主开关 -->
+    <string name="setting_master">启用电池信息通知</string>
+    <string name="setting_master_desc">由 SystemUI 下发常驻通知，实时展示功率、电流、电压、电池容量等数据</string>
+
+    <!-- 实时预览 -->
+    <string name="section_preview">实时预览</string>
+    <string name="preview_status_daemon">Root 数据</string>
+    <string name="daemon_running">可用</string>
+    <string name="daemon_stopped">不可用</string>
+    <string name="daemon_querying">检测中…</string>
+    <string name="preview_no_data">暂无电池数据</string>
+    <string name="preview_hint">预览仅包含系统数据源；实际通知还会包含 Root 读取的精确数据</string>
+
+    <!-- 显示模式 -->
+    <string name="section_display_mode">显示模式</string>
+    <string name="mode_always">始终显示</string>
+    <string name="mode_charging">仅充电时</string>
+    <string name="mode_discharging">仅放电时</string>
+
+    <!-- 显示内容 -->
+    <string name="section_display_items">显示内容</string>
+    <string name="item_level">电量</string>
+    <string name="item_level_desc">当前电量百分比</string>
+    <string name="item_power">功率</string>
+    <string name="item_power_desc">充电或放电功率（W），Root 数据不可用时按电压×电流估算</string>
+    <string name="item_current">电流</string>
+    <string name="item_current_desc">实时电流（mA），标注充电或放电</string>
+    <string name="item_voltage">电压</string>
+    <string name="item_voltage_desc">电池电压（V）</string>
+    <string name="item_charge">剩余容量</string>
+    <string name="item_charge_desc">剩余容量（mAh）与百分比</string>
+    <string name="item_capacity">满充容量</string>
+    <string name="item_capacity_desc">电池当前实际最大容量（mAh），厂商 FCC 数据</string>
+    <string name="item_design">设计容量</string>
+    <string name="item_design_desc">电池出厂设计容量（mAh）</string>
+    <string name="item_time">预计时间</string>
+    <string name="item_time_desc">充电时显示预计充满时间，放电时显示预计可用时长</string>
+    <string name="item_temperature">温度</string>
+    <string name="item_temperature_desc">电池温度（°C）</string>
+    <string name="item_cycle">循环次数</string>
+    <string name="item_cycle_desc">电池完整循环次数（需 Root）</string>
+    <string name="item_health">健康状态</string>
+    <string name="item_health_desc">系统上报的电池健康状态（良好/过热等）</string>
+    <string name="item_health_percent">电池健康度</string>
+    <string name="item_health_percent_desc">满充容量 ÷ 设计容量 × 100% 自行计算</string>
+    <string name="item_status">充电状态</string>
+    <string name="item_status_desc">充电状态、接入方式与快充类型</string>
+
+    <!-- 版本横幅 -->
+    <string name="banner_version_mismatch">模块版本不一致</string>
+    <string name="banner_restart_hint">请重启 SystemUI 使更新生效</string>
+    <string name="action_restart_systemui">重启 SystemUI</string>
+
+    <!-- 设置：外观 -->
+    <string name="section_appearance">外观</string>
+    <string name="setting_monet">全局莫奈取色</string>
+    <string name="setting_monet_desc">使用系统 Material You 动态取色</string>
+
+    <!-- 设置：通知 -->
+    <string name="section_notification">通知</string>
+    <string name="setting_update_interval">通知刷新间隔</string>
+    <string name="setting_update_interval_desc">实时刷新通知内容的最小间隔，越小更新越实时</string>
+    <string name="setting_title_template">自定义标题</string>
+    <string name="setting_title_template_desc">通知标题模板，支持变量替换</string>
+    <string name="setting_title_template_hint">可用变量：{level} {status} {power} {current} {voltage} {temp} {charge} {full} {design} {health} {cycle} {ttf} {tte} {charger}</string>
+    <string name="setting_title_template_preview">预览：</string>
+    <string name="setting_lockscreen">锁屏显示</string>
+    <string name="setting_lockscreen_desc">允许通知内容在锁屏界面显示</string>
+
+    <!-- 设置：Root 数据 -->
+    <string name="section_daemon">Root 精确数据</string>
+    <string name="setting_use_daemon">启用 Root 精确数据</string>
+    <string name="setting_use_daemon_desc">以 root 读取 /sys/class/power_supply，提供功率、满充容量、循环次数等精确数据</string>
+    <string name="daemon_status_title">Root 数据状态</string>
+    <string name="daemon_status_disabled">未启用</string>
+    <string name="daemon_status_running">可用</string>
+    <string name="daemon_status_stopped">不可用（Root 读取失败）</string>
+    <string name="daemon_action_restart_desc">点击立即重新读取并检测 Root 可用性</string>
+
+    <!-- 设置：系统 -->
+    <string name="section_system">系统</string>
+    <string name="setting_restart_systemui">重启SystemUI</string>
+    <string name="setting_restart_desc">仅在配置不生效时尝试，大部分配置实时生效</string>
+    <string name="setting_restart_restarting">正在重启 SystemUI…</string>
+    <string name="setting_about">关于</string>
+    <string name="app_description">由被 Hook 的 SystemUI 下发电池通知，实时展示功率、电流、电压、电池容量等数据。</string>
+    <string name="label_version">版本 %s</string>
+
+    <!-- 关于与更新 -->
+    <string name="screen_about">关于</string>
+    <string name="app_subtitle">电池信息 · LSPosed 模块</string>
+    <string name="section_author">作者</string>
+    <string name="section_contributors">贡献者</string>
+    <string name="section_contact">联系方式</string>
+    <string name="label_blog">博客</string>
+    <string name="label_coolapk">酷安</string>
+    <string name="label_github">开源地址</string>
+    <string name="label_check_update">检查更新</string>
+    <string name="label_check_update_desc">点击查看是否有新版本</string>
+    <string name="label_contributions">%d 次贡献</string>
+    <string name="label_developer_only">开发者</string>
+    <string name="content_app_icon">软件图标</string>
+    <string name="content_avatar">作者头像</string>
+    <string name="action_back">返回</string>
+    <string name="screen_update">检查更新</string>
+    <string name="update_checking">正在检查更新…</string>
+    <string name="update_failed">检查失败，请检查网络后重试</string>
+    <string name="update_available">发现新版本 v%s</string>
+    <string name="update_current">当前版本 v%s</string>
+    <string name="section_changelog">更新日志</string>
+    <string name="action_download_browser">前往浏览器下载</string>
+    <string name="update_up_to_date">当前已是最新版本 v%s</string>
+    <string name="toast_browser_error">无法打开浏览器</string>
+    <string name="toast_open_link_error">无法打开链接</string>
+</resources>
