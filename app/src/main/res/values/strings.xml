@@ -24,7 +24,7 @@
     <string name="preview_hint">预览仅包含系统数据源；实际通知还会包含 Root 读取的精确数据</string>
 
     <!-- 显示模式 -->
-    <string name="section_display_mode">显示模式</string>
+    <string name="section_display_mode">通知显示模式</string>
     <string name="mode_always">始终显示</string>
     <string name="mode_charging">仅充电时</string>
     <string name="mode_discharging">仅放电时</string>

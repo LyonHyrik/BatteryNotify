@@ -24,7 +24,7 @@
     <string name="preview_hint">Preview covers framework data only; the actual notification also includes precise root-read data</string>
 
     <!-- Display mode -->
-    <string name="section_display_mode">Display mode</string>
+    <string name="section_display_mode">Notification display mode</string>
     <string name="mode_always">Always</string>
     <string name="mode_charging">While charging</string>
     <string name="mode_discharging">While discharging</string>
