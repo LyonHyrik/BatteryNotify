@@ -78,6 +78,8 @@
     <string name="setting_title_template_preview">Preview: </string>
     <string name="setting_lockscreen">Show on lock screen</string>
     <string name="setting_lockscreen_desc">Allow notification content to be shown on the lock screen</string>
+    <string name="setting_statusbar_icon">Hide status bar notification icon</string>
+    <string name="setting_statusbar_icon_desc">Only show in notification shade, hide this icon from status bar area</string>
 
     <!-- Settings: root data -->
     <string name="section_daemon">Root precise data</string>

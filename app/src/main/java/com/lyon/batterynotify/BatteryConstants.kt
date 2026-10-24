@@ -30,6 +30,7 @@ object BatteryConstants {
     const val KEY_SHOW_HEALTH = "show_health"
     const val KEY_SHOW_HEALTH_PERCENT = "show_health_percent"
     const val KEY_SHOW_STATUS = "show_status"
+    const val KEY_SHOW_STATUSBAR_ICON = "show_statusbar_icon"
 
     // 显示模式
     const val DISPLAY_MODE_ALWAYS = 0
@@ -58,6 +59,7 @@ object BatteryConstants {
     const val DEFAULT_SHOW_HEALTH = true
     const val DEFAULT_SHOW_HEALTH_PERCENT = true
     const val DEFAULT_SHOW_STATUS = true
+    const val DEFAULT_SHOW_STATUSBAR_ICON = true
 
     const val MIN_UPDATE_INTERVAL_MS = 500
     const val MAX_UPDATE_INTERVAL_MS = 30000

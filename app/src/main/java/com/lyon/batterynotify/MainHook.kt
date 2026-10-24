@@ -3,10 +3,13 @@ package com.lyon.batterynotify
 import android.content.Context
 import android.os.Handler
 import android.os.Looper
-import de.robv.android.xposed.IXposedHookLoadPackage
-import de.robv.android.xposed.callbacks.XC_LoadPackage
 import com.lyon.batterynotify.systemui.BatteryLog
 import com.lyon.batterynotify.systemui.BatteryNotifier
+import de.robv.android.xposed.IXposedHookLoadPackage
+import de.robv.android.xposed.XC_MethodHook
+import de.robv.android.xposed.XposedBridge
+import de.robv.android.xposed.XposedHelpers
+import de.robv.android.xposed.callbacks.XC_LoadPackage
 
 class MainHook : IXposedHookLoadPackage {
 
@@ -14,6 +17,7 @@ class MainHook : IXposedHookLoadPackage {
         when (lpparam.packageName) {
             BatteryConstants.SYSTEMUI_PACKAGE -> {
                 BatteryLog.x("handleLoadPackage: ${lpparam.packageName} / process=${lpparam.processName}, scheduling notifier start")
+                hookStatusBarIcon(lpparam)
                 Handler(Looper.getMainLooper()).postDelayed({
                     try {
                         val app = currentApplication()
@@ -52,6 +56,83 @@ class MainHook : IXposedHookLoadPackage {
             BatteryLog.x("module version reported: ${BuildConfig.VERSION_CODE}")
         } catch (t: Throwable) {
             BatteryLog.x("failed to report module version: $t")
+        }
+    }
+
+    private fun hookStatusBarIcon(lpparam: XC_LoadPackage.LoadPackageParam) {
+        try {
+            val clazz = XposedHelpers.findClass(
+                "com.android.systemui.statusbar.notification.icon.domain.interactor.NotificationIconsInteractor",
+                lpparam.classLoader,
+            )
+            val method = try {
+                XposedHelpers.findMethodExact(
+                    clazz,
+                    "access\$shouldShowNotificationIcon",
+                    "com.android.systemui.statusbar.notification.icon.domain.interactor.NotificationIconsInteractor",
+                    "com.android.systemui.statusbar.notification.shared.ActiveNotificationModel",
+                    Boolean::class.javaPrimitiveType,
+                    Boolean::class.javaPrimitiveType,
+                    Boolean::class.javaPrimitiveType,
+                    Boolean::class.javaPrimitiveType,
+                    Boolean::class.javaPrimitiveType,
+                    String::class.java,
+                    Boolean::class.javaPrimitiveType,
+                )
+            } catch (_: Throwable) {
+                val activeModel = XposedHelpers.findClass(
+                    "com.android.systemui.statusbar.notification.shared.ActiveNotificationModel",
+                    lpparam.classLoader,
+                )
+                XposedHelpers.findMethodBestMatch(
+                    clazz,
+                    "access\$shouldShowNotificationIcon",
+                    clazz,
+                    activeModel,
+                    Boolean::class.javaPrimitiveType,
+                    Boolean::class.javaPrimitiveType,
+                    Boolean::class.javaPrimitiveType,
+                    Boolean::class.javaPrimitiveType,
+                    Boolean::class.javaPrimitiveType,
+                    String::class.java,
+                    Boolean::class.javaPrimitiveType,
+                )
+            }
+
+            XposedBridge.hookMethod(method, object : XC_MethodHook() {
+                override fun afterHookedMethod(param: MethodHookParam) {
+                    try {
+                        val app = currentApplication() ?: return
+                        val prefs = app.getSharedPreferences("bn_systemui_cache", Context.MODE_PRIVATE)
+                        val showStatusbarIcon = prefs.getBoolean(
+                            BatteryConstants.KEY_SHOW_STATUSBAR_ICON,
+                            BatteryConstants.DEFAULT_SHOW_STATUSBAR_ICON,
+                        )
+                        if (showStatusbarIcon) return
+
+                        val model = param.args.getOrNull(1) ?: return
+                        val key = try {
+                            XposedHelpers.callMethod(model, "getKey") as? String
+                        } catch (_: Throwable) {
+                            try {
+                                XposedHelpers.getObjectField(model, "key") as? String
+                            } catch (_: Throwable) {
+                                null
+                            }
+                        }
+
+                        if (key != null && key.contains("|${BatteryConstants.SYSTEMUI_PACKAGE}|${BatteryConstants.NOTIFICATION_ID}|")) {
+                            param.result = false
+                            BatteryLog.x("hide statusbar icon for key=$key")
+                        }
+                    } catch (t: Throwable) {
+                        BatteryLog.x("hookStatusBarIcon error", t)
+                    }
+                }
+            })
+            BatteryLog.x("hooked NotificationIconsInteractor.access\$shouldShowNotificationIcon")
+        } catch (t: Throwable) {
+            BatteryLog.x("hookStatusBarIcon failed", t)
         }
     }
 }

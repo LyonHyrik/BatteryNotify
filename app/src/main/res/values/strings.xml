@@ -78,6 +78,8 @@
     <string name="setting_title_template_preview">预览：</string>
     <string name="setting_lockscreen">锁屏显示</string>
     <string name="setting_lockscreen_desc">允许通知内容在锁屏界面显示</string>
+    <string name="setting_statusbar_icon">隐藏状态栏通知图标</string>
+    <string name="setting_statusbar_icon_desc">仅在通知中心显示，不在状态栏图标区域显示本通知图标</string>
 
     <!-- 设置：Root 数据 -->
     <string name="section_daemon">Root 精确数据</string>

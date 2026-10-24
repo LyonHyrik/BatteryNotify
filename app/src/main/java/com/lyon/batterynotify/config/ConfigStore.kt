@@ -17,6 +17,7 @@ class ConfigStore(context: Context) {
         titleTemplate = prefs.getString(BatteryConstants.KEY_TITLE_TEMPLATE, BatteryConstants.DEFAULT_TITLE_TEMPLATE)
             ?: BatteryConstants.DEFAULT_TITLE_TEMPLATE,
         showLockscreen = prefs.getBoolean(BatteryConstants.KEY_SHOW_LOCKSCREEN, BatteryConstants.DEFAULT_SHOW_LOCKSCREEN),
+        showStatusbarIcon = prefs.getBoolean(BatteryConstants.KEY_SHOW_STATUSBAR_ICON, BatteryConstants.DEFAULT_SHOW_STATUSBAR_ICON),
         showLevel = prefs.getBoolean(BatteryConstants.KEY_SHOW_LEVEL, BatteryConstants.DEFAULT_SHOW_LEVEL),
         showPower = prefs.getBoolean(BatteryConstants.KEY_SHOW_POWER, BatteryConstants.DEFAULT_SHOW_POWER),
         showCurrent = prefs.getBoolean(BatteryConstants.KEY_SHOW_CURRENT, BatteryConstants.DEFAULT_SHOW_CURRENT),
@@ -41,6 +42,7 @@ class ConfigStore(context: Context) {
             .putBoolean(BatteryConstants.KEY_USE_DAEMON, config.useDaemon)
             .putString(BatteryConstants.KEY_TITLE_TEMPLATE, config.titleTemplate)
             .putBoolean(BatteryConstants.KEY_SHOW_LOCKSCREEN, config.showLockscreen)
+            .putBoolean(BatteryConstants.KEY_SHOW_STATUSBAR_ICON, config.showStatusbarIcon)
             .putBoolean(BatteryConstants.KEY_SHOW_LEVEL, config.showLevel)
             .putBoolean(BatteryConstants.KEY_SHOW_POWER, config.showPower)
             .putBoolean(BatteryConstants.KEY_SHOW_CURRENT, config.showCurrent)

@@ -11,6 +11,7 @@ data class BatteryConfig(
     val useDaemon: Boolean = BatteryConstants.DEFAULT_USE_DAEMON,
     val titleTemplate: String = BatteryConstants.DEFAULT_TITLE_TEMPLATE,
     val showLockscreen: Boolean = BatteryConstants.DEFAULT_SHOW_LOCKSCREEN,
+    val showStatusbarIcon: Boolean = BatteryConstants.DEFAULT_SHOW_STATUSBAR_ICON,
     val showLevel: Boolean = BatteryConstants.DEFAULT_SHOW_LEVEL,
     val showPower: Boolean = BatteryConstants.DEFAULT_SHOW_POWER,
     val showCurrent: Boolean = BatteryConstants.DEFAULT_SHOW_CURRENT,
@@ -33,6 +34,7 @@ data class BatteryConfig(
         putBoolean(BatteryConstants.KEY_USE_DAEMON, useDaemon)
         putString(BatteryConstants.KEY_TITLE_TEMPLATE, titleTemplate)
         putBoolean(BatteryConstants.KEY_SHOW_LOCKSCREEN, showLockscreen)
+        putBoolean(BatteryConstants.KEY_SHOW_STATUSBAR_ICON, showStatusbarIcon)
         putBoolean(BatteryConstants.KEY_SHOW_LEVEL, showLevel)
         putBoolean(BatteryConstants.KEY_SHOW_POWER, showPower)
         putBoolean(BatteryConstants.KEY_SHOW_CURRENT, showCurrent)
@@ -61,6 +63,7 @@ data class BatteryConfig(
                 useDaemon = bundle.getBoolean(BatteryConstants.KEY_USE_DAEMON, BatteryConstants.DEFAULT_USE_DAEMON),
                 titleTemplate = bundle.getString(BatteryConstants.KEY_TITLE_TEMPLATE) ?: BatteryConstants.DEFAULT_TITLE_TEMPLATE,
                 showLockscreen = bundle.getBoolean(BatteryConstants.KEY_SHOW_LOCKSCREEN, BatteryConstants.DEFAULT_SHOW_LOCKSCREEN),
+                showStatusbarIcon = bundle.getBoolean(BatteryConstants.KEY_SHOW_STATUSBAR_ICON, BatteryConstants.DEFAULT_SHOW_STATUSBAR_ICON),
                 showLevel = bundle.getBoolean(BatteryConstants.KEY_SHOW_LEVEL, BatteryConstants.DEFAULT_SHOW_LEVEL),
                 showPower = bundle.getBoolean(BatteryConstants.KEY_SHOW_POWER, BatteryConstants.DEFAULT_SHOW_POWER),
                 showCurrent = bundle.getBoolean(BatteryConstants.KEY_SHOW_CURRENT, BatteryConstants.DEFAULT_SHOW_CURRENT),

@@ -230,6 +230,15 @@ fun SettingsScreen(
                 summary = stringResource(R.string.setting_lockscreen_desc),
             )
 
+            Spacer(Modifier.height(8.dp))
+
+            SuperSwitch(
+                checked = !config.value.showStatusbarIcon,
+                onCheckedChange = { checked -> save(config.value.copy(showStatusbarIcon = !checked)) },
+                title = stringResource(R.string.setting_statusbar_icon),
+                summary = stringResource(R.string.setting_statusbar_icon_desc),
+            )
+
             // ── 守护进程 ────────────────────────────────────────
             SmallTitle(stringResource(R.string.section_daemon))
 
