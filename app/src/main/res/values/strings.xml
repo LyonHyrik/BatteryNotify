@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">电池信息</string>
+    <string name="app_name">BatteryNotify</string>
 
     <!-- 底部导航 -->
     <string name="nav_home">通知</string>
