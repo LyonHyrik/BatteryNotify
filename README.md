@@ -26,7 +26,7 @@
 
 | 📱 设备 | 🤖 系统版本 | 📝 状态 |
 |---------|-----------|---------|
-| OPPO Reno8 Pro | ColorOS 17.0 | ⭐ 已验证 By Lyon |
+| OPPO Reno8 Pro | ColorOS 17.0（官改包） | ⭐ 已验证 By Lyon |
 
 ## 📱 功能
 
