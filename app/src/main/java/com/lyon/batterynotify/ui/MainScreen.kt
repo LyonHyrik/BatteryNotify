@@ -121,13 +121,6 @@ fun MainScreen(
 
             LivePreviewCard(config = config.value)
 
-            SmallTitle(stringResource(R.string.section_display_mode))
-
-            DisplayModeSelector(
-                mode = config.value.displayMode,
-                onSelect = { mode -> save(config.value.copy(displayMode = mode)) },
-            )
-
             SmallTitle(stringResource(R.string.section_display_items))
 
             ItemSwitch(
@@ -227,60 +220,6 @@ private fun ItemSwitch(
         title = title,
         summary = summary,
     )
-}
-
-@Composable
-private fun DisplayModeSelector(
-    mode: Int,
-    onSelect: (Int) -> Unit,
-) {
-    Card(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(horizontal = 16.dp, vertical = 8.dp),
-    ) {
-        Column(
-            modifier = Modifier.padding(horizontal = 16.dp, vertical = 12.dp),
-        ) {
-            Text(
-                text = stringResource(R.string.section_display_mode),
-                color = MiuixTheme.colorScheme.onSurfaceContainer,
-            )
-            Spacer(Modifier.height(10.dp))
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.spacedBy(8.dp),
-            ) {
-                val options = listOf(
-                    BatteryConstants.DISPLAY_MODE_ALWAYS to stringResource(R.string.mode_always),
-                    BatteryConstants.DISPLAY_MODE_CHARGING to stringResource(R.string.mode_charging),
-                    BatteryConstants.DISPLAY_MODE_DISCHARGING to stringResource(R.string.mode_discharging),
-                )
-                options.forEach { (value, label) ->
-                    val selected = mode == value
-                    Box(
-                        modifier = Modifier
-                            .weight(1f)
-                            .clip(RoundedCornerShape(10.dp))
-                            .background(
-                                if (selected) MiuixTheme.colorScheme.primary
-                                else MiuixTheme.colorScheme.surfaceContainerHighest
-                            )
-                            .clickable { onSelect(value) }
-                            .padding(vertical = 10.dp),
-                        contentAlignment = Alignment.Center,
-                    ) {
-                        Text(
-                            text = label,
-                            color = if (selected) Color.White
-                            else MiuixTheme.colorScheme.onSurfaceContainer,
-                            fontSize = 12.sp,
-                        )
-                    }
-                }
-            }
-        }
-    }
 }
 
 @Composable

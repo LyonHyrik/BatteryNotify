@@ -81,6 +81,18 @@
     <string name="setting_statusbar_icon">Hide status bar notification icon</string>
     <string name="setting_statusbar_icon_desc">Only show in notification shade, hide this icon from status bar area</string>
 
+    <!-- Settings: capsule -->
+    <string name="section_capsule">Live capsule (Fluid Cloud)</string>
+    <string name="setting_capsule_mode">Live capsule display mode</string>
+    <string name="setting_capsule_mode_desc">Control when live capsule shows separately from the notification</string>
+    <string name="setting_capsule_charge_delay">Delay live capsule on charging</string>
+    <string name="setting_capsule_charge_delay_desc">Only for \"While charging\" mode; delay after plug-in to avoid conflict with system charging capsule</string>
+    <string name="setting_capsule_charge_delay_sec">Delay (seconds)</string>
+    <string name="setting_capsule_template">Custom live capsule content</string>
+    <string name="setting_capsule_template_desc">Leave empty to use default format; supports variable substitution</string>
+    <string name="setting_capsule_template_hint">Variables: {level} {status} {power} {current} {voltage} {temp} {charge} {full} {design} {health} {cycle} {ttf} {tte} {charger}</string>
+    <string name="setting_capsule_template_preview">Preview: </string>
+
     <!-- Settings: root data -->
     <string name="section_daemon">Root precise data</string>
     <string name="setting_use_daemon">Enable root precise data</string>

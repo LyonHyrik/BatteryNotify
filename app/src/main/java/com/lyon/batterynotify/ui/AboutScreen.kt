@@ -1,4 +1,4 @@
-package com.lyon.batterynotify.ui
+﻿package com.lyon.batterynotify.ui
 
 import android.graphics.BitmapFactory
 import android.graphics.Canvas
@@ -32,13 +32,10 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.lyon.batterynotify.BuildConfig
-import com.lyon.batterynotify.R
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import org.json.JSONArray
@@ -51,6 +48,9 @@ import top.yukonga.miuix.kmp.basic.Text
 import top.yukonga.miuix.kmp.icon.MiuixIcons
 import top.yukonga.miuix.kmp.icon.basic.ArrowRight
 import top.yukonga.miuix.kmp.theme.MiuixTheme
+import androidx.compose.ui.res.stringResource
+import com.lyon.batterynotify.BuildConfig
+import com.lyon.batterynotify.R
 import java.net.HttpURLConnection
 import java.net.URL
 
@@ -187,7 +187,7 @@ fun AboutScreen(
                         )
                         val ownContributions = contributors?.firstOrNull { it.login == AUTHOR_NAME }?.contributions
                         Text(
-                            text = if (ownContributions != null) "${stringResource(R.string.label_developer_only)} · ${stringResource(R.string.label_contributions, ownContributions)}" else stringResource(R.string.label_developer_only),
+                            text = if (ownContributions != null) "${stringResource(R.string.label_developer_only)} 共 ${stringResource(R.string.label_contributions, ownContributions)}" else stringResource(R.string.label_developer_only),
                             color = MiuixTheme.colorScheme.onSurfaceContainerVariant,
                             fontSize = 12.sp,
                         )
@@ -359,7 +359,7 @@ private fun AppIcon(monetEnabled: Boolean) {
     val icon = remember(monetEnabled) {
         try {
             if (monetEnabled) {
-                val drawable = context.getDrawable(R.drawable.ic_launcher_foreground)
+                val drawable = context.getDrawable(com.lyon.batterynotify.R.drawable.ic_launcher_foreground)
                 if (drawable != null) {
                     val bitmap = android.graphics.Bitmap.createBitmap(108, 108, android.graphics.Bitmap.Config.ARGB_8888)
                     val canvas = Canvas(bitmap)
@@ -476,7 +476,7 @@ private fun NetworkAvatar(url: String, size: Int) {
             )
         } else {
             Text(
-                text = "L",
+                text = "R",
                 color = MiuixTheme.colorScheme.primary,
                 fontSize = 24.sp,
                 fontWeight = FontWeight.Bold,
@@ -484,3 +484,4 @@ private fun NetworkAvatar(url: String, size: Int) {
         }
     }
 }
+

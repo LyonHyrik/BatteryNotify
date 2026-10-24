@@ -5,8 +5,11 @@ import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.os.Build
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -15,6 +18,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
@@ -25,6 +29,8 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
@@ -173,10 +179,12 @@ fun SettingsScreen(
                     Slider(
                         value = config.value.updateIntervalMs.toFloat(),
                         onValueChange = { value ->
-                            config.value = config.value.copy(updateIntervalMs = value.toInt())
+                            val newConfig = config.value.copy(updateIntervalMs = value.toInt())
+                            config.value = newConfig
+                            store.write(newConfig)
+                            context.sendBroadcast(Intent(BatteryConstants.ACTION_REFRESH_CONFIG))
                         },
                         valueRange = BatteryConstants.MIN_UPDATE_INTERVAL_MS.toFloat()..BatteryConstants.MAX_UPDATE_INTERVAL_MS.toFloat(),
-                        onValueChangeFinished = { save(config.value) },
                     )
                 }
             }
@@ -223,6 +231,13 @@ fun SettingsScreen(
                 }
             }
 
+            ModeSelector(
+                title = stringResource(R.string.section_display_mode),
+                summary = null,
+                mode = config.value.displayMode,
+                onSelect = { mode -> save(config.value.copy(displayMode = mode)) },
+            )
+
             SuperSwitch(
                 checked = config.value.showLockscreen,
                 onCheckedChange = { checked -> save(config.value.copy(showLockscreen = checked)) },
@@ -238,6 +253,108 @@ fun SettingsScreen(
                 title = stringResource(R.string.setting_statusbar_icon),
                 summary = stringResource(R.string.setting_statusbar_icon_desc),
             )
+
+            // ── 流体云 ────────────────────────────────────────────
+            SmallTitle(stringResource(R.string.section_capsule))
+
+            ModeSelector(
+                title = stringResource(R.string.setting_capsule_mode),
+                summary = stringResource(R.string.setting_capsule_mode_desc),
+                mode = config.value.capsuleDisplayMode,
+                onSelect = { mode -> save(config.value.copy(capsuleDisplayMode = mode)) },
+            )
+
+            SuperSwitch(
+                checked = config.value.capsuleChargeDelay,
+                onCheckedChange = { checked -> save(config.value.copy(capsuleChargeDelay = checked)) },
+                title = stringResource(R.string.setting_capsule_charge_delay),
+                summary = stringResource(R.string.setting_capsule_charge_delay_desc),
+            )
+
+            Card(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 16.dp, vertical = 8.dp),
+            ) {
+                Column(
+                    modifier = Modifier.padding(horizontal = 16.dp, vertical = 10.dp),
+                ) {
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = androidx.compose.foundation.layout.Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.CenterVertically,
+                    ) {
+                        Text(
+                            text = stringResource(R.string.setting_capsule_charge_delay_sec),
+                            color = MiuixTheme.colorScheme.onSurfaceContainer,
+                        )
+                        Text(
+                            text = "${config.value.capsuleChargeDelaySec}s",
+                            color = MiuixTheme.colorScheme.primary,
+                        )
+                    }
+                    Slider(
+                        value = config.value.capsuleChargeDelaySec.toFloat(),
+                        onValueChange = { value ->
+                            val newConfig = config.value.copy(capsuleChargeDelaySec = value.toInt())
+                            config.value = newConfig
+                            store.write(newConfig)
+                            context.sendBroadcast(Intent(BatteryConstants.ACTION_REFRESH_CONFIG))
+                        },
+                        valueRange = 1f..60f,
+                    )
+                }
+            }
+
+            Card(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 16.dp, vertical = 8.dp),
+            ) {
+                Column(
+                    modifier = Modifier.padding(horizontal = 16.dp, vertical = 10.dp),
+                ) {
+                    Text(
+                        text = stringResource(R.string.setting_capsule_template),
+                        color = MiuixTheme.colorScheme.onSurfaceContainer,
+                    )
+                    Text(
+                        text = stringResource(R.string.setting_capsule_template_desc),
+                        color = MiuixTheme.colorScheme.onSurfaceContainerVariant,
+                        fontSize = 12.sp,
+                    )
+                    Spacer(Modifier.height(8.dp))
+                    TextField(
+                        value = config.value.capsuleTemplate,
+                        onValueChange = { template ->
+                            save(config.value.copy(capsuleTemplate = template))
+                        },
+                        modifier = Modifier.fillMaxWidth(),
+                        enabled = true,
+                    )
+                    Spacer(Modifier.height(6.dp))
+                    Text(
+                        text = stringResource(R.string.setting_capsule_template_hint),
+                        color = MiuixTheme.colorScheme.onSurfaceContainerVariant,
+                        fontSize = 11.sp,
+                    )
+                    Spacer(Modifier.height(4.dp))
+                    val capsulePreview = if (config.value.capsuleTemplate.isBlank()) {
+                        BatteryFormatter.renderTitle(
+                            BatteryConstants.DEFAULT_CAPSULE_TEMPLATE.ifBlank { "{level}% · {power}W" },
+                            previewInfo(context),
+                            config.value
+                        )
+                    } else {
+                        BatteryFormatter.renderTitle(config.value.capsuleTemplate, previewInfo(context), config.value)
+                    }
+                    Text(
+                        text = stringResource(R.string.setting_capsule_template_preview) + capsulePreview,
+                        color = MiuixTheme.colorScheme.primary,
+                        fontSize = 12.sp,
+                    )
+                }
+            }
 
             // ── 守护进程 ────────────────────────────────────────
             SmallTitle(stringResource(R.string.section_daemon))
@@ -349,6 +466,69 @@ fun SettingsScreen(
             }
 
             Spacer(Modifier.height(12.dp))
+        }
+    }
+}
+
+@Composable
+private fun ModeSelector(
+    title: String,
+    summary: String?,
+    mode: Int,
+    onSelect: (Int) -> Unit,
+) {
+    Card(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = 16.dp, vertical = 8.dp),
+    ) {
+        Column(
+            modifier = Modifier.padding(horizontal = 16.dp, vertical = 12.dp),
+        ) {
+            Text(
+                text = title,
+                color = MiuixTheme.colorScheme.onSurfaceContainer,
+            )
+            if (summary != null) {
+                Text(
+                    text = summary,
+                    color = MiuixTheme.colorScheme.onSurfaceContainerVariant,
+                    fontSize = 12.sp,
+                )
+            }
+            Spacer(Modifier.height(10.dp))
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.spacedBy(8.dp),
+            ) {
+                val options = listOf(
+                    BatteryConstants.DISPLAY_MODE_ALWAYS to stringResource(R.string.mode_always),
+                    BatteryConstants.DISPLAY_MODE_CHARGING to stringResource(R.string.mode_charging),
+                    BatteryConstants.DISPLAY_MODE_DISCHARGING to stringResource(R.string.mode_discharging),
+                )
+                options.forEach { (value, label) ->
+                    val selected = mode == value
+                    Box(
+                        modifier = Modifier
+                            .weight(1f)
+                            .clip(RoundedCornerShape(10.dp))
+                            .background(
+                                if (selected) MiuixTheme.colorScheme.primary
+                                else MiuixTheme.colorScheme.surfaceContainerHighest
+                            )
+                            .clickable { onSelect(value) }
+                            .padding(vertical = 10.dp),
+                        contentAlignment = Alignment.Center,
+                    ) {
+                        Text(
+                            text = label,
+                            color = if (selected) Color.White
+                            else MiuixTheme.colorScheme.onSurfaceContainer,
+                            fontSize = 12.sp,
+                        )
+                    }
+                }
+            }
         }
     }
 }

@@ -10,6 +10,10 @@ data class BatteryConfig(
     val updateIntervalMs: Int = BatteryConstants.DEFAULT_UPDATE_INTERVAL_MS,
     val useDaemon: Boolean = BatteryConstants.DEFAULT_USE_DAEMON,
     val titleTemplate: String = BatteryConstants.DEFAULT_TITLE_TEMPLATE,
+    val capsuleTemplate: String = BatteryConstants.DEFAULT_CAPSULE_TEMPLATE,
+    val capsuleDisplayMode: Int = BatteryConstants.DEFAULT_CAPSULE_DISPLAY_MODE,
+    val capsuleChargeDelay: Boolean = BatteryConstants.DEFAULT_CAPSULE_CHARGE_DELAY,
+    val capsuleChargeDelaySec: Int = BatteryConstants.DEFAULT_CAPSULE_CHARGE_DELAY_SEC,
     val showLockscreen: Boolean = BatteryConstants.DEFAULT_SHOW_LOCKSCREEN,
     val showStatusbarIcon: Boolean = BatteryConstants.DEFAULT_SHOW_STATUSBAR_ICON,
     val showLevel: Boolean = BatteryConstants.DEFAULT_SHOW_LEVEL,
@@ -33,6 +37,10 @@ data class BatteryConfig(
         putInt(BatteryConstants.KEY_UPDATE_INTERVAL_MS, updateIntervalMs)
         putBoolean(BatteryConstants.KEY_USE_DAEMON, useDaemon)
         putString(BatteryConstants.KEY_TITLE_TEMPLATE, titleTemplate)
+        putString(BatteryConstants.KEY_CAPSULE_TEMPLATE, capsuleTemplate)
+        putInt(BatteryConstants.KEY_CAPSULE_DISPLAY_MODE, capsuleDisplayMode)
+        putBoolean(BatteryConstants.KEY_CAPSULE_CHARGE_DELAY, capsuleChargeDelay)
+        putInt(BatteryConstants.KEY_CAPSULE_CHARGE_DELAY_SEC, capsuleChargeDelaySec)
         putBoolean(BatteryConstants.KEY_SHOW_LOCKSCREEN, showLockscreen)
         putBoolean(BatteryConstants.KEY_SHOW_STATUSBAR_ICON, showStatusbarIcon)
         putBoolean(BatteryConstants.KEY_SHOW_LEVEL, showLevel)
@@ -62,6 +70,11 @@ data class BatteryConfig(
                     .coerceIn(BatteryConstants.MIN_UPDATE_INTERVAL_MS, BatteryConstants.MAX_UPDATE_INTERVAL_MS),
                 useDaemon = bundle.getBoolean(BatteryConstants.KEY_USE_DAEMON, BatteryConstants.DEFAULT_USE_DAEMON),
                 titleTemplate = bundle.getString(BatteryConstants.KEY_TITLE_TEMPLATE) ?: BatteryConstants.DEFAULT_TITLE_TEMPLATE,
+                capsuleTemplate = bundle.getString(BatteryConstants.KEY_CAPSULE_TEMPLATE) ?: BatteryConstants.DEFAULT_CAPSULE_TEMPLATE,
+                capsuleDisplayMode = bundle.getInt(BatteryConstants.KEY_CAPSULE_DISPLAY_MODE, BatteryConstants.DEFAULT_CAPSULE_DISPLAY_MODE)
+                    .coerceIn(BatteryConstants.DISPLAY_MODE_ALWAYS, BatteryConstants.DISPLAY_MODE_DISCHARGING),
+                capsuleChargeDelay = bundle.getBoolean(BatteryConstants.KEY_CAPSULE_CHARGE_DELAY, BatteryConstants.DEFAULT_CAPSULE_CHARGE_DELAY),
+                capsuleChargeDelaySec = bundle.getInt(BatteryConstants.KEY_CAPSULE_CHARGE_DELAY_SEC, BatteryConstants.DEFAULT_CAPSULE_CHARGE_DELAY_SEC).coerceIn(1, 60),
                 showLockscreen = bundle.getBoolean(BatteryConstants.KEY_SHOW_LOCKSCREEN, BatteryConstants.DEFAULT_SHOW_LOCKSCREEN),
                 showStatusbarIcon = bundle.getBoolean(BatteryConstants.KEY_SHOW_STATUSBAR_ICON, BatteryConstants.DEFAULT_SHOW_STATUSBAR_ICON),
                 showLevel = bundle.getBoolean(BatteryConstants.KEY_SHOW_LEVEL, BatteryConstants.DEFAULT_SHOW_LEVEL),

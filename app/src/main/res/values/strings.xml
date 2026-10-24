@@ -81,6 +81,18 @@
     <string name="setting_statusbar_icon">隐藏状态栏通知图标</string>
     <string name="setting_statusbar_icon_desc">仅在通知中心显示，不在状态栏图标区域显示本通知图标</string>
 
+    <!-- 设置：流体云 -->
+    <string name="section_capsule">流体云（状态栏胶囊）</string>
+    <string name="setting_capsule_mode">流体云显示模式</string>
+    <string name="setting_capsule_mode_desc">单独控制流体云何时显示，不影响通知中心通知</string>
+    <string name="setting_capsule_charge_delay">充电时延迟显示流体云</string>
+    <string name="setting_capsule_charge_delay_desc">仅在「仅充电时」模式下生效，插入充电器后延迟显示以避开系统充电流体云</string>
+    <string name="setting_capsule_charge_delay_sec">延迟秒数</string>
+    <string name="setting_capsule_template">自定义流体云内容</string>
+    <string name="setting_capsule_template_desc">留空则使用默认格式，支持变量替换</string>
+    <string name="setting_capsule_template_hint">可用变量：{level} {status} {power} {current} {voltage} {temp} {charge} {full} {design} {health} {cycle} {ttf} {tte} {charger}</string>
+    <string name="setting_capsule_template_preview">预览：</string>
+
     <!-- 设置：Root 数据 -->
     <string name="section_daemon">Root 精确数据</string>
     <string name="setting_use_daemon">启用 Root 精确数据</string>

@@ -46,6 +46,8 @@ object BatteryNotifier {
     private var batteryReceiver: BroadcastReceiver? = null
     private var moduleReceiver: BroadcastReceiver? = null
     private val handler = Handler(Looper.getMainLooper())
+    private var lastPluggedState: Int = -1
+    private var plugChangedAtMs: Long = 0L
 
     private val tickRunnable = object : Runnable {
         override fun run() {
@@ -239,7 +241,35 @@ object BatteryNotifier {
                 return
             }
 
-            val notification = Notification.Builder(context, BatteryConstants.NOTIFICATION_CHANNEL_ID_V2)
+            // Android 16 Live Updates（ColorOS 16 流体云）
+            val capsuleText = buildCapsuleText(info, config)
+            var capsuleAllowed = when (config.capsuleDisplayMode) {
+                BatteryConstants.DISPLAY_MODE_CHARGING -> info.plugged != 0
+                BatteryConstants.DISPLAY_MODE_DISCHARGING -> info.plugged == 0
+                else -> true
+            }
+            if (capsuleAllowed && config.capsuleChargeDelay && config.capsuleDisplayMode == BatteryConstants.DISPLAY_MODE_CHARGING && info.plugged != 0) {
+                if (lastPluggedState == 0 && info.plugged != 0) {
+                    plugChangedAtMs = SystemClock.elapsedRealtime()
+                }
+                if (lastPluggedState == -1) {
+                    lastPluggedState = info.plugged
+                    if (info.plugged != 0) {
+                        plugChangedAtMs = SystemClock.elapsedRealtime()
+                    }
+                }
+                val elapsed = (SystemClock.elapsedRealtime() - plugChangedAtMs) / 1000L
+                if (elapsed < config.capsuleChargeDelaySec.toLong()) {
+                    capsuleAllowed = false
+                }
+            }
+            lastPluggedState = info.plugged
+            try {
+                supportsPromotedNotifications()
+            } catch (_: Throwable) {
+            }
+
+            val builder = Notification.Builder(context, BatteryConstants.NOTIFICATION_CHANNEL_ID_V2)
                 .setSmallIcon(resolveSmallIcon())
                 .setContentTitle(BatteryFormatter.renderTitle(config.titleTemplate, info, config))
                 .setContentText(BatteryFormatter.summary(lines))
@@ -252,30 +282,36 @@ object BatteryNotifier {
                     if (config.showLockscreen) Notification.VISIBILITY_PUBLIC
                     else Notification.VISIBILITY_SECRET
                 )
-                .build()
+
+            if (capsuleAllowed) {
+                try {
+                    if (Build.VERSION.SDK_INT >= 36) {
+                        builder.setShortCriticalText(capsuleText)
+                    }
+                } catch (t: Throwable) {
+                    BatteryLog.x("setShortCriticalText failed", t)
+                }
+            }
+
+            val notification = builder.build()
 
             try {
                 val extras = notification.extras
+                if (capsuleAllowed) {
+                    extras.putBoolean("android.requestPromotedOngoing", true)
+                    extras.putString("android.title.capsule", capsuleText)
+                    extras.putString("android.capsule.title", capsuleText)
+                }
                 val isOplus = Build.MANUFACTURER.equals("OPPO", true) ||
                     Build.BRAND.equals("realme", true) ||
                     Build.MANUFACTURER.equals("OnePlus", true) ||
                     Build.BRAND.equals("OnePlus", true)
                 if (isOplus) {
-                    // 尝试让锁屏胶囊更干净：只做背景透明，不强制隐藏图标
                     extras.putBoolean("oplus_keyguard_notification_transparent", true)
                     extras.putBoolean("oplus_keyguard_transparent", true)
                     extras.putInt("oplus_keyguard_bg_color", 0x00000000)
                     extras.putInt("oplus_keyguard_notification_bg_color", 0x00000000)
                     extras.putBoolean("oplus_keyguard_use_transparent_bg", true)
-                    // 尝试流体云（LiveCapsule）——需在系统设置开启“显示实时状态”才会生效
-                    extras.putBoolean("isOplusLiveCapsule", true)
-                    extras.putBoolean("oplus_live_capsule_enable", true)
-                    extras.putBoolean("oplus_is_live_notification", true)
-                    extras.putBoolean("oplus.live.capsule", true)
-                    extras.putString("oplus.notification.type", "live")
-                    extras.putString("oplus.live.type", "battery")
-                    extras.putString("oplus_live_capsule_type", "battery")
-                    extras.putString("live_type", "battery")
                 }
             } catch (_: Throwable) {
             }
@@ -287,6 +323,50 @@ object BatteryNotifier {
     }
 
     private var cachedSmallIcon: Icon? = null
+
+    private var promotedLogged = false
+
+    private fun supportsPromotedNotifications(): Boolean {
+        if (Build.VERSION.SDK_INT < 36) return false
+        return try {
+            val ok = notificationManager?.canPostPromotedNotifications() == true
+            if (!promotedLogged) {
+                promotedLogged = true
+                BatteryLog.x("canPostPromotedNotifications=$ok")
+            }
+            ok
+        } catch (t: Throwable) {
+            if (!promotedLogged) {
+                promotedLogged = true
+                BatteryLog.x("canPostPromotedNotifications failed", t)
+            }
+            false
+        }
+    }
+
+    private fun buildCapsuleText(info: BatteryInfo, config: BatteryConfig): String {
+        if (config.capsuleTemplate.isNotBlank()) {
+            return BatteryFormatter.renderTitle(config.capsuleTemplate, info, config).replace("\n", " ")
+        }
+        val parts = mutableListOf<String>()
+        if (config.showLevel) parts += "${info.level}%"
+        val power = BatteryFormatter.powerW(info)
+        if (power != null && Math.abs(power) > 0.05) {
+            parts += if (info.plugged != 0) {
+                String.format("%.1fW 充电", Math.abs(power))
+            } else {
+                String.format("%.1fW", Math.abs(power))
+            }
+        } else if (config.showStatus) {
+            parts += when {
+                info.status == BatteryInfo.STATUS_FULL -> "已充满"
+                info.plugged != 0 && info.isCharging -> "充电中"
+                info.plugged != 0 -> "已连接"
+                else -> "放电中"
+            }
+        }
+        return if (parts.isEmpty()) "${info.level}%" else parts.joinToString(" · ")
+    }
 
     /**
      * 通知小图标：使用模块自带的"电池 + 闪电"矢量图。

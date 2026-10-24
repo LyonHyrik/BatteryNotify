@@ -15,6 +15,10 @@ object BatteryConstants {
     const val KEY_UPDATE_INTERVAL_MS = "update_interval_ms"
     const val KEY_USE_DAEMON = "use_daemon"
     const val KEY_TITLE_TEMPLATE = "title_template"
+    const val KEY_CAPSULE_TEMPLATE = "capsule_template"
+    const val KEY_CAPSULE_DISPLAY_MODE = "capsule_display_mode"
+    const val KEY_CAPSULE_CHARGE_DELAY = "capsule_charge_delay"
+    const val KEY_CAPSULE_CHARGE_DELAY_SEC = "capsule_charge_delay_sec"
     const val KEY_SHOW_LOCKSCREEN = "show_lockscreen"
 
     const val KEY_SHOW_LEVEL = "show_level"
@@ -44,6 +48,10 @@ object BatteryConstants {
     const val DEFAULT_UPDATE_INTERVAL_MS = 1000
     const val DEFAULT_USE_DAEMON = true
     const val DEFAULT_TITLE_TEMPLATE = "电池信息 · {level}% · {status}"
+    const val DEFAULT_CAPSULE_TEMPLATE = ""
+    const val DEFAULT_CAPSULE_DISPLAY_MODE = DISPLAY_MODE_ALWAYS
+    const val DEFAULT_CAPSULE_CHARGE_DELAY = false
+    const val DEFAULT_CAPSULE_CHARGE_DELAY_SEC = 10
     const val DEFAULT_SHOW_LOCKSCREEN = true
 
     const val DEFAULT_SHOW_LEVEL = true

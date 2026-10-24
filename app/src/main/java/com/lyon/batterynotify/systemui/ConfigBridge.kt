@@ -44,6 +44,11 @@ class ConfigBridge(context: Context) {
         useDaemon = cachePrefs.getBoolean(BatteryConstants.KEY_USE_DAEMON, BatteryConstants.DEFAULT_USE_DAEMON),
         titleTemplate = cachePrefs.getString(BatteryConstants.KEY_TITLE_TEMPLATE, BatteryConstants.DEFAULT_TITLE_TEMPLATE)
             ?: BatteryConstants.DEFAULT_TITLE_TEMPLATE,
+        capsuleTemplate = cachePrefs.getString(BatteryConstants.KEY_CAPSULE_TEMPLATE, BatteryConstants.DEFAULT_CAPSULE_TEMPLATE)
+            ?: BatteryConstants.DEFAULT_CAPSULE_TEMPLATE,
+        capsuleDisplayMode = cachePrefs.getInt(BatteryConstants.KEY_CAPSULE_DISPLAY_MODE, BatteryConstants.DEFAULT_CAPSULE_DISPLAY_MODE),
+        capsuleChargeDelay = cachePrefs.getBoolean(BatteryConstants.KEY_CAPSULE_CHARGE_DELAY, BatteryConstants.DEFAULT_CAPSULE_CHARGE_DELAY),
+        capsuleChargeDelaySec = cachePrefs.getInt(BatteryConstants.KEY_CAPSULE_CHARGE_DELAY_SEC, BatteryConstants.DEFAULT_CAPSULE_CHARGE_DELAY_SEC),
         showLockscreen = cachePrefs.getBoolean(BatteryConstants.KEY_SHOW_LOCKSCREEN, BatteryConstants.DEFAULT_SHOW_LOCKSCREEN),
         showStatusbarIcon = cachePrefs.getBoolean(BatteryConstants.KEY_SHOW_STATUSBAR_ICON, BatteryConstants.DEFAULT_SHOW_STATUSBAR_ICON),
         showLevel = cachePrefs.getBoolean(BatteryConstants.KEY_SHOW_LEVEL, BatteryConstants.DEFAULT_SHOW_LEVEL),
@@ -70,6 +75,10 @@ class ConfigBridge(context: Context) {
                 .putInt(BatteryConstants.KEY_UPDATE_INTERVAL_MS, config.updateIntervalMs)
                 .putBoolean(BatteryConstants.KEY_USE_DAEMON, config.useDaemon)
                 .putString(BatteryConstants.KEY_TITLE_TEMPLATE, config.titleTemplate)
+                .putString(BatteryConstants.KEY_CAPSULE_TEMPLATE, config.capsuleTemplate)
+                .putInt(BatteryConstants.KEY_CAPSULE_DISPLAY_MODE, config.capsuleDisplayMode)
+                .putBoolean(BatteryConstants.KEY_CAPSULE_CHARGE_DELAY, config.capsuleChargeDelay)
+                .putInt(BatteryConstants.KEY_CAPSULE_CHARGE_DELAY_SEC, config.capsuleChargeDelaySec)
                 .putBoolean(BatteryConstants.KEY_SHOW_LOCKSCREEN, config.showLockscreen)
                 .putBoolean(BatteryConstants.KEY_SHOW_STATUSBAR_ICON, config.showStatusbarIcon)
                 .putBoolean(BatteryConstants.KEY_SHOW_LEVEL, config.showLevel)

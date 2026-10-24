@@ -16,6 +16,12 @@ class ConfigStore(context: Context) {
         useDaemon = prefs.getBoolean(BatteryConstants.KEY_USE_DAEMON, BatteryConstants.DEFAULT_USE_DAEMON),
         titleTemplate = prefs.getString(BatteryConstants.KEY_TITLE_TEMPLATE, BatteryConstants.DEFAULT_TITLE_TEMPLATE)
             ?: BatteryConstants.DEFAULT_TITLE_TEMPLATE,
+        capsuleTemplate = prefs.getString(BatteryConstants.KEY_CAPSULE_TEMPLATE, BatteryConstants.DEFAULT_CAPSULE_TEMPLATE)
+            ?: BatteryConstants.DEFAULT_CAPSULE_TEMPLATE,
+        capsuleDisplayMode = prefs.getInt(BatteryConstants.KEY_CAPSULE_DISPLAY_MODE, BatteryConstants.DEFAULT_CAPSULE_DISPLAY_MODE)
+            .coerceIn(BatteryConstants.DISPLAY_MODE_ALWAYS, BatteryConstants.DISPLAY_MODE_DISCHARGING),
+        capsuleChargeDelay = prefs.getBoolean(BatteryConstants.KEY_CAPSULE_CHARGE_DELAY, BatteryConstants.DEFAULT_CAPSULE_CHARGE_DELAY),
+        capsuleChargeDelaySec = prefs.getInt(BatteryConstants.KEY_CAPSULE_CHARGE_DELAY_SEC, BatteryConstants.DEFAULT_CAPSULE_CHARGE_DELAY_SEC).coerceIn(1, 60),
         showLockscreen = prefs.getBoolean(BatteryConstants.KEY_SHOW_LOCKSCREEN, BatteryConstants.DEFAULT_SHOW_LOCKSCREEN),
         showStatusbarIcon = prefs.getBoolean(BatteryConstants.KEY_SHOW_STATUSBAR_ICON, BatteryConstants.DEFAULT_SHOW_STATUSBAR_ICON),
         showLevel = prefs.getBoolean(BatteryConstants.KEY_SHOW_LEVEL, BatteryConstants.DEFAULT_SHOW_LEVEL),
@@ -41,6 +47,10 @@ class ConfigStore(context: Context) {
             .putInt(BatteryConstants.KEY_UPDATE_INTERVAL_MS, config.updateIntervalMs)
             .putBoolean(BatteryConstants.KEY_USE_DAEMON, config.useDaemon)
             .putString(BatteryConstants.KEY_TITLE_TEMPLATE, config.titleTemplate)
+            .putString(BatteryConstants.KEY_CAPSULE_TEMPLATE, config.capsuleTemplate)
+            .putInt(BatteryConstants.KEY_CAPSULE_DISPLAY_MODE, config.capsuleDisplayMode)
+            .putBoolean(BatteryConstants.KEY_CAPSULE_CHARGE_DELAY, config.capsuleChargeDelay)
+            .putInt(BatteryConstants.KEY_CAPSULE_CHARGE_DELAY_SEC, config.capsuleChargeDelaySec)
             .putBoolean(BatteryConstants.KEY_SHOW_LOCKSCREEN, config.showLockscreen)
             .putBoolean(BatteryConstants.KEY_SHOW_STATUSBAR_ICON, config.showStatusbarIcon)
             .putBoolean(BatteryConstants.KEY_SHOW_LEVEL, config.showLevel)
