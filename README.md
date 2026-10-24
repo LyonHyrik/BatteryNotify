@@ -10,8 +10,6 @@
 [![📜 License: AGPL-3.0](https://img.shields.io/badge/License-AGPL--3.0-blue.svg)](LICENSE)
 [![📱 API](https://img.shields.io/badge/API-31%2B-brightgreen.svg)](https://developer.android.com/about/versions/s)
 
-[English](README.en.md) · 中文
-
 </div>
 
 ---
