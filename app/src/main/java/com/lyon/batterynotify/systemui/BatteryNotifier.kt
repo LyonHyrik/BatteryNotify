@@ -254,6 +254,32 @@ object BatteryNotifier {
                 )
                 .build()
 
+            try {
+                val extras = notification.extras
+                val isOplus = Build.MANUFACTURER.equals("OPPO", true) ||
+                    Build.BRAND.equals("realme", true) ||
+                    Build.MANUFACTURER.equals("OnePlus", true) ||
+                    Build.BRAND.equals("OnePlus", true)
+                if (isOplus) {
+                    // 尝试让锁屏胶囊更干净：只做背景透明，不强制隐藏图标
+                    extras.putBoolean("oplus_keyguard_notification_transparent", true)
+                    extras.putBoolean("oplus_keyguard_transparent", true)
+                    extras.putInt("oplus_keyguard_bg_color", 0x00000000)
+                    extras.putInt("oplus_keyguard_notification_bg_color", 0x00000000)
+                    extras.putBoolean("oplus_keyguard_use_transparent_bg", true)
+                    // 尝试流体云（LiveCapsule）——需在系统设置开启“显示实时状态”才会生效
+                    extras.putBoolean("isOplusLiveCapsule", true)
+                    extras.putBoolean("oplus_live_capsule_enable", true)
+                    extras.putBoolean("oplus_is_live_notification", true)
+                    extras.putBoolean("oplus.live.capsule", true)
+                    extras.putString("oplus.notification.type", "live")
+                    extras.putString("oplus.live.type", "battery")
+                    extras.putString("oplus_live_capsule_type", "battery")
+                    extras.putString("live_type", "battery")
+                }
+            } catch (_: Throwable) {
+            }
+
             notificationManager?.notify(BatteryConstants.NOTIFICATION_ID, notification)
         } catch (t: Throwable) {
             BatteryLog.x("update failed", t)
