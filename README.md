@@ -22,6 +22,12 @@
 - 🔧 [LSPosed](https://github.com/LSPosed/LSPosed)
 - ☑️ 勾选 `com.android.systemui` 与 `android`（系统框架）作用域
 
+## 📱 支持设备与系统
+
+| 📱 设备 | 🤖 系统版本 | 📝 状态 |
+|---------|-----------|---------|
+| OPPO Reno8 Pro | ColorOS 17.0 | ⭐ 已验证 By Lyon |
+
 ## 📱 功能
 
 - 🔋 **电池信息通知** — 由 SystemUI 进程下发，展示电量、功率、电流、电压、温度、电池健康、循环次数等
