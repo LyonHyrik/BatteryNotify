@@ -19,6 +19,7 @@ object BatteryConstants {
     const val KEY_CAPSULE_DISPLAY_MODE = "capsule_display_mode"
     const val KEY_CAPSULE_CHARGE_DELAY = "capsule_charge_delay"
     const val KEY_CAPSULE_CHARGE_DELAY_SEC = "capsule_charge_delay_sec"
+    const val KEY_DUAL_CELL = "dual_cell"
     const val KEY_SHOW_LOCKSCREEN = "show_lockscreen"
 
     const val KEY_SHOW_LEVEL = "show_level"
@@ -52,6 +53,7 @@ object BatteryConstants {
     const val DEFAULT_CAPSULE_DISPLAY_MODE = DISPLAY_MODE_ALWAYS
     const val DEFAULT_CAPSULE_CHARGE_DELAY = false
     const val DEFAULT_CAPSULE_CHARGE_DELAY_SEC = 10
+    const val DEFAULT_DUAL_CELL = false
     const val DEFAULT_SHOW_LOCKSCREEN = true
 
     const val DEFAULT_SHOW_LEVEL = true

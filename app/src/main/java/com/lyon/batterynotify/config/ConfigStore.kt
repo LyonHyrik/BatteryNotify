@@ -22,6 +22,7 @@ class ConfigStore(context: Context) {
             .coerceIn(BatteryConstants.DISPLAY_MODE_ALWAYS, BatteryConstants.DISPLAY_MODE_DISCHARGING),
         capsuleChargeDelay = prefs.getBoolean(BatteryConstants.KEY_CAPSULE_CHARGE_DELAY, BatteryConstants.DEFAULT_CAPSULE_CHARGE_DELAY),
         capsuleChargeDelaySec = prefs.getInt(BatteryConstants.KEY_CAPSULE_CHARGE_DELAY_SEC, BatteryConstants.DEFAULT_CAPSULE_CHARGE_DELAY_SEC).coerceIn(1, 60),
+        dualCell = prefs.getBoolean(BatteryConstants.KEY_DUAL_CELL, BatteryConstants.DEFAULT_DUAL_CELL),
         showLockscreen = prefs.getBoolean(BatteryConstants.KEY_SHOW_LOCKSCREEN, BatteryConstants.DEFAULT_SHOW_LOCKSCREEN),
         showStatusbarIcon = prefs.getBoolean(BatteryConstants.KEY_SHOW_STATUSBAR_ICON, BatteryConstants.DEFAULT_SHOW_STATUSBAR_ICON),
         showLevel = prefs.getBoolean(BatteryConstants.KEY_SHOW_LEVEL, BatteryConstants.DEFAULT_SHOW_LEVEL),
@@ -51,6 +52,7 @@ class ConfigStore(context: Context) {
             .putInt(BatteryConstants.KEY_CAPSULE_DISPLAY_MODE, config.capsuleDisplayMode)
             .putBoolean(BatteryConstants.KEY_CAPSULE_CHARGE_DELAY, config.capsuleChargeDelay)
             .putInt(BatteryConstants.KEY_CAPSULE_CHARGE_DELAY_SEC, config.capsuleChargeDelaySec)
+            .putBoolean(BatteryConstants.KEY_DUAL_CELL, config.dualCell)
             .putBoolean(BatteryConstants.KEY_SHOW_LOCKSCREEN, config.showLockscreen)
             .putBoolean(BatteryConstants.KEY_SHOW_STATUSBAR_ICON, config.showStatusbarIcon)
             .putBoolean(BatteryConstants.KEY_SHOW_LEVEL, config.showLevel)

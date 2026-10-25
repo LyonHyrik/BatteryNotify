@@ -55,7 +55,7 @@ object BatteryFormatter {
     private fun titleVariable(key: String, info: BatteryInfo, config: BatteryConfig): String? = when (key) {
         "level" -> if (info.level >= 0) "${info.level}" else null
         "status" -> statusShort(info)
-        "power" -> powerW(info)?.let { format("%.2fW", it) }
+        "power" -> powerW(info, config)?.let { format("%.2fW", it) }
         "current" -> effectiveCurrentUa(info)?.let { "${Math.abs(it) / 1000}mA" }
         "voltage" -> voltageMv(info)?.let { format("%.2fV", it / 1000.0) }
         "temp" -> temperatureC(info)?.let { format("%.1f°C", it) }
@@ -184,7 +184,10 @@ object BatteryFormatter {
         return v * Math.abs(i) / 1_000_000L
     }
 
-    fun powerW(info: BatteryInfo): Double? = powerUw(info)?.let { it / 1_000_000.0 }
+    fun powerW(info: BatteryInfo, config: BatteryConfig? = null): Double? {
+        val w = powerUw(info)?.let { it / 1_000_000.0 } ?: return null
+        return if (config?.dualCell == true) w * 2.0 else w
+    }
 
     fun voltageMv(info: BatteryInfo): Int? = effectiveVoltageUv(info)?.let { (it / 1000L).toInt() }
 

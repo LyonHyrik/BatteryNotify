@@ -14,6 +14,7 @@ data class BatteryConfig(
     val capsuleDisplayMode: Int = BatteryConstants.DEFAULT_CAPSULE_DISPLAY_MODE,
     val capsuleChargeDelay: Boolean = BatteryConstants.DEFAULT_CAPSULE_CHARGE_DELAY,
     val capsuleChargeDelaySec: Int = BatteryConstants.DEFAULT_CAPSULE_CHARGE_DELAY_SEC,
+    val dualCell: Boolean = BatteryConstants.DEFAULT_DUAL_CELL,
     val showLockscreen: Boolean = BatteryConstants.DEFAULT_SHOW_LOCKSCREEN,
     val showStatusbarIcon: Boolean = BatteryConstants.DEFAULT_SHOW_STATUSBAR_ICON,
     val showLevel: Boolean = BatteryConstants.DEFAULT_SHOW_LEVEL,
@@ -41,6 +42,7 @@ data class BatteryConfig(
         putInt(BatteryConstants.KEY_CAPSULE_DISPLAY_MODE, capsuleDisplayMode)
         putBoolean(BatteryConstants.KEY_CAPSULE_CHARGE_DELAY, capsuleChargeDelay)
         putInt(BatteryConstants.KEY_CAPSULE_CHARGE_DELAY_SEC, capsuleChargeDelaySec)
+        putBoolean(BatteryConstants.KEY_DUAL_CELL, dualCell)
         putBoolean(BatteryConstants.KEY_SHOW_LOCKSCREEN, showLockscreen)
         putBoolean(BatteryConstants.KEY_SHOW_STATUSBAR_ICON, showStatusbarIcon)
         putBoolean(BatteryConstants.KEY_SHOW_LEVEL, showLevel)
@@ -75,6 +77,7 @@ data class BatteryConfig(
                     .coerceIn(BatteryConstants.DISPLAY_MODE_ALWAYS, BatteryConstants.DISPLAY_MODE_DISCHARGING),
                 capsuleChargeDelay = bundle.getBoolean(BatteryConstants.KEY_CAPSULE_CHARGE_DELAY, BatteryConstants.DEFAULT_CAPSULE_CHARGE_DELAY),
                 capsuleChargeDelaySec = bundle.getInt(BatteryConstants.KEY_CAPSULE_CHARGE_DELAY_SEC, BatteryConstants.DEFAULT_CAPSULE_CHARGE_DELAY_SEC).coerceIn(1, 60),
+                dualCell = bundle.getBoolean(BatteryConstants.KEY_DUAL_CELL, BatteryConstants.DEFAULT_DUAL_CELL),
                 showLockscreen = bundle.getBoolean(BatteryConstants.KEY_SHOW_LOCKSCREEN, BatteryConstants.DEFAULT_SHOW_LOCKSCREEN),
                 showStatusbarIcon = bundle.getBoolean(BatteryConstants.KEY_SHOW_STATUSBAR_ICON, BatteryConstants.DEFAULT_SHOW_STATUSBAR_ICON),
                 showLevel = bundle.getBoolean(BatteryConstants.KEY_SHOW_LEVEL, BatteryConstants.DEFAULT_SHOW_LEVEL),

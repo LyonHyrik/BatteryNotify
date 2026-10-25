@@ -254,6 +254,17 @@ fun SettingsScreen(
                 summary = stringResource(R.string.setting_statusbar_icon_desc),
             )
 
+            Spacer(Modifier.height(8.dp))
+
+            SmallTitle(stringResource(R.string.section_dual_cell))
+
+            SuperSwitch(
+                checked = config.value.dualCell,
+                onCheckedChange = { checked -> save(config.value.copy(dualCell = checked)) },
+                title = stringResource(R.string.setting_dual_cell),
+                summary = stringResource(R.string.setting_dual_cell_desc),
+            )
+
             // ── 流体云 ────────────────────────────────────────────
             SmallTitle(stringResource(R.string.section_capsule))
 

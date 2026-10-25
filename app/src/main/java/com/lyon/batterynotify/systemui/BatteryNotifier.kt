@@ -350,7 +350,7 @@ object BatteryNotifier {
         }
         val parts = mutableListOf<String>()
         if (config.showLevel) parts += "${info.level}%"
-        val power = BatteryFormatter.powerW(info)
+        val power = BatteryFormatter.powerW(info, config)
         if (power != null && Math.abs(power) > 0.05) {
             parts += if (info.plugged != 0) {
                 String.format("%.1fW 充电", Math.abs(power))
