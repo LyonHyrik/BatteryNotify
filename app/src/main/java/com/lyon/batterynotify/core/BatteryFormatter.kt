@@ -56,7 +56,7 @@ object BatteryFormatter {
         "level" -> if (info.level >= 0) "${info.level}" else null
         "status" -> statusShort(info)
         "power" -> powerW(info, config)?.let { format("%.2fW", it) }
-        "current" -> effectiveCurrentUa(info)?.let { "${Math.abs(it) / 1000}mA" }
+        "current" -> effectiveCurrentUa(info, config)?.let { "${Math.abs(it) / 1000}mA" }
         "voltage" -> voltageMv(info)?.let { format("%.2fV", it / 1000.0) }
         "temp" -> temperatureC(info)?.let { format("%.1f°C", it) }
         "charge" -> info.chargeCounterUah?.let { "${it / 1000}mAh" }
@@ -65,7 +65,7 @@ object BatteryFormatter {
         "health" -> healthPercent(info)?.let { "$it%" }
         "cycle" -> info.cycleCount?.let { "${it}次" }
         "ttf" -> timeToFullText(info)
-        "tte" -> timeToEmptyText(info)
+        "tte" -> timeToEmptyText(info, config)
         "charger" -> info.chargerName
         else -> null
     }
@@ -81,10 +81,10 @@ object BatteryFormatter {
             out += "电量 ${info.level}%"
         }
         if (config.showPower) {
-            out += "功率 ${powerW(info)?.let { format("%.2fW", it) } ?: "—"}"
+            out += "功率 ${powerW(info, config)?.let { format("%.2fW", it) } ?: "—"}"
         }
         if (config.showCurrent) {
-            val ua = effectiveCurrentUa(info)
+            val ua = effectiveCurrentUa(info, config)
             out += if (ua != null) {
                 val sign = if (info.isCharging) "充电" else "放电"
                 "电流 ${Math.abs(ua) / 1000}mA（$sign）"
@@ -110,8 +110,8 @@ object BatteryFormatter {
             out += "设计容量 ${effectiveDesignUah(info)?.let { "${it / 1000}mAh" } ?: "—"}"
         }
         if (config.showEstimate) {
-            val ttf = timeToFullText(info)
-            val tte = timeToEmptyText(info)
+            val ttf = timeToFullText(info, config)
+            val tte = timeToEmptyText(info, config)
             out += when {
                 ttf != null -> "预计充满 $ttf"
                 tte != null -> "预计可用 $tte"
@@ -141,8 +141,10 @@ object BatteryFormatter {
     fun effectiveVoltageUv(info: BatteryInfo): Long? =
         info.voltageNowUv ?: info.voltageMv.takeIf { it > 0 }?.let { it * 1000L }
 
-    fun effectiveCurrentUa(info: BatteryInfo): Long? =
-        (info.currentNowUa ?: info.currentUa?.takeIf { it != 0L })?.let { normalizeUa(it) }
+    fun effectiveCurrentUa(info: BatteryInfo, config: BatteryConfig? = null): Long? {
+        val ua = (info.currentNowUa ?: info.currentUa?.takeIf { it != 0L })?.let { normalizeUa(it) } ?: return null
+        return if (config?.dualCell == true) ua * 2 else ua
+    }
 
     /** 实际满充容量：优先厂商 FCC（oplus battery_fcc），回退 gauge charge_full */
     fun effectiveFullUah(info: BatteryInfo): Long? =
@@ -177,17 +179,18 @@ object BatteryFormatter {
         if (v != 0L && Math.abs(v) < UNIT_HEURISTIC_THRESHOLD) v * 1000L else v
 
     /** 功率（µW）：优先 power_now，否则 电压 × 电流 估算 */
-    fun powerUw(info: BatteryInfo): Long? {
-        info.powerNowUw?.takeIf { it != 0L }?.let { return Math.abs(normalizeUw(it)) }
+    fun powerUw(info: BatteryInfo, config: BatteryConfig? = null): Long? {
+        val p = info.powerNowUw?.takeIf { it != 0L }?.let { Math.abs(normalizeUw(it)) }
+        if (p != null) {
+            return if (config?.dualCell == true) p * 2L else p
+        }
         val v = effectiveVoltageUv(info) ?: return null
-        val i = effectiveCurrentUa(info) ?: return null
+        val i = effectiveCurrentUa(info, config) ?: return null
         return v * Math.abs(i) / 1_000_000L
     }
 
-    fun powerW(info: BatteryInfo, config: BatteryConfig? = null): Double? {
-        val w = powerUw(info)?.let { it / 1_000_000.0 } ?: return null
-        return if (config?.dualCell == true) w * 2.0 else w
-    }
+    fun powerW(info: BatteryInfo, config: BatteryConfig? = null): Double? =
+        powerUw(info, config)?.let { it / 1_000_000.0 }
 
     fun voltageMv(info: BatteryInfo): Int? = effectiveVoltageUv(info)?.let { (it / 1000L).toInt() }
 
@@ -201,11 +204,11 @@ object BatteryFormatter {
      * (满充容量 − 剩余容量) ÷ 充电电流。
      * 注意：恒流/涓流阶段电流会变化，此为线性估算，末段会偏长。
      */
-    fun timeToFullMinutes(info: BatteryInfo): Long? {
+    fun timeToFullMinutes(info: BatteryInfo, config: BatteryConfig? = null): Long? {
         if (!info.isCharging) return null
         val remaining = info.chargeCounterUah ?: return null
         val full = effectiveFullUah(info) ?: return null
-        val currentUa = effectiveCurrentUa(info)?.takeIf { it != 0L } ?: return null
+        val currentUa = effectiveCurrentUa(info, config)?.takeIf { it != 0L } ?: return null
         val missing = (full - remaining).coerceAtLeast(0L)
         // µAh ÷ µA = h → ×60 得分钟
         return missing * 60L / Math.abs(currentUa)
@@ -215,16 +218,16 @@ object BatteryFormatter {
      * 预计可用时间（分钟）：仅放电中可算。
      * 剩余容量 ÷ 放电电流。
      */
-    fun timeToEmptyMinutes(info: BatteryInfo): Long? {
+    fun timeToEmptyMinutes(info: BatteryInfo, config: BatteryConfig? = null): Long? {
         if (info.isCharging) return null
         val remaining = info.chargeCounterUah ?: return null
-        val currentUa = effectiveCurrentUa(info)?.takeIf { it != 0L } ?: return null
+        val currentUa = effectiveCurrentUa(info, config)?.takeIf { it != 0L } ?: return null
         return remaining * 60L / Math.abs(currentUa)
     }
 
-    fun timeToFullText(info: BatteryInfo): String? = timeToFullMinutes(info)?.let { formatDuration(it) }
+    fun timeToFullText(info: BatteryInfo, config: BatteryConfig? = null): String? = timeToFullMinutes(info, config)?.let { formatDuration(it) }
 
-    fun timeToEmptyText(info: BatteryInfo): String? = timeToEmptyMinutes(info)?.let { formatDuration(it) }
+    fun timeToEmptyText(info: BatteryInfo, config: BatteryConfig? = null): String? = timeToEmptyMinutes(info, config)?.let { formatDuration(it) }
 
     /** 分钟 → “X小时Y分” / “Y分” */
     fun formatDuration(minutes: Long): String {
