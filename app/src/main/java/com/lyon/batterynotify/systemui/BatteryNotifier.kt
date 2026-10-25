@@ -223,7 +223,14 @@ object BatteryNotifier {
                 RootReader.refreshAsync()
             }
 
-            val info = collect(intent, config)
+            var info = collect(intent, config)
+            if (config.dualCell) {
+                info = info.copy(
+                    currentUa = info.currentUa?.times(2),
+                    currentNowUa = info.currentNowUa?.times(2),
+                    powerNowUw = info.powerNowUw?.times(2),
+                )
+            }
 
             val visible = when (config.displayMode) {
                 BatteryConstants.DISPLAY_MODE_CHARGING -> info.plugged != 0
