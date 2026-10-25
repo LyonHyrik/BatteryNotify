@@ -96,7 +96,7 @@
     <!-- 设置：双电芯 -->
     <string name="section_dual_cell">双电芯</string>
     <string name="setting_dual_cell">启用双电芯模式</string>
-    <string name="setting_dual_cell_desc">部分并联双电芯机型需开启（Reno8 Pro 这类 2S 串联且已汇总上报的机型一般不用开）</string>
+    <string name="setting_dual_cell_desc">开启后功率与电流将翻倍</string>
 
     <!-- 设置：Root 数据 -->
     <string name="section_daemon">Root 精确数据</string>
